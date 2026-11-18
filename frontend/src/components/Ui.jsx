@@ -33,6 +33,14 @@ export function Panel({ children, style }) {
   return <View style={[styles.panel, style]}>{children}</View>;
 }
 
+export function MoedasPill({ moedas }) {
+  return (
+    <View style={styles.moedas}>
+      <Text style={styles.moedasText}>🪙 {moedas} MOEDAS</Text>
+    </View>
+  );
+}
+
 export function StatusMessage({ message }) {
   if (!message) {
     return null;
@@ -89,6 +97,20 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.card,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  moedas: {
+    alignSelf: 'center',
+    borderRadius: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    backgroundColor: colors.surface,
+    borderWidth: 2,
+    borderColor: colors.primaryDark,
+  },
+  moedasText: {
+    color: colors.textPrimary,
     fontSize: 11,
     fontWeight: '900',
   },

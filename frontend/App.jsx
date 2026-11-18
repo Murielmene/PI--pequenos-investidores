@@ -9,6 +9,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import TipsScreen from './src/screens/TipsScreen';
+import { GameProvider } from './src/state/GameContext';
 import { colors } from './src/theme';
 
 const initialProfile = {
@@ -175,10 +176,12 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-      {renderScreen()}
-    </SafeAreaView>
+    <GameProvider>
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
+        {renderScreen()}
+      </SafeAreaView>
+    </GameProvider>
   );
 }
 
