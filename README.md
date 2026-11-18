@@ -74,7 +74,7 @@ cd backend
 npm install
 # 1) copie .env.example para .env e preencha a senha do MySQL
 # 2) crie o banco/tabela executando o schema (veja abaixo)
-npm start                 # sobe a API em http://localhost:3001
+npm run dev                 # sobe a API em http://localhost:3001
 ```
 > **Criar o banco:** execute o conteúdo de `backend/src/database/schema.sql` no seu MySQL
 > (pelo MySQL Workbench, linha de comando `mysql -u root -p < src/database/schema.sql`,
