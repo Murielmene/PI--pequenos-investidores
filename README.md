@@ -130,7 +130,8 @@ PI--pequenos-investidores-main/
         │   └── EditProfileScreen.jsx
         ├── games/                  ← jogos
         │   ├── QuizGame.jsx
-        │   └── MemoryGame.jsx
+        │   ├── MemoryGame.jsx
+        │   └── AgoraOuDepoisGame.jsx
         ├── state/                  ← estado global da gamificação
         │   ├── GameContext.jsx     ← "memória" do app (moedas, avatares, dicas)
         │   ├── storage.js          ← salvar/ler do localStorage
@@ -228,7 +229,7 @@ Reaproveitar esses componentes evita repetir código e mantém o visual padroniz
 - **LoginScreen / RegisterScreen** — entrada e cadastro (o cadastro chama a API e grava no banco).
 - **HomeScreen** — tela inicial: avatar + saldo, **estatísticas** (moedas/avatares/dicas),
   **dica do dia**, **atalhos** (jogar, loja, dicas, perfil), "Você sabia?", "Como ganhar moedas" e desafio diário.
-- **GamesScreen** — "hub" que lista os jogos e abre o Quiz ou a Memória.
+- **GamesScreen** — "hub" que lista os jogos e abre o Quiz, a Memória ou o Agora ou Depois?.
 - **ShopScreen** — loja: compra/equipa avatares pagando com moedas.
 - **TipsScreen** — dicas em formato **gaveta (accordion)** com contagem regressiva da próxima.
 - **ProfileScreen** — avatar equipado, saldo e a galeria "meus avatares" (toque para trocar).
@@ -243,6 +244,21 @@ Jogo da memória (6 pares). Embaralha as cartas, vira duas por vez e compara.
 Ao **completar o tabuleiro**, paga **+25 moedas** (uma única vez). Conceitos usados:
 `useState` (cartas/seleção), `useRef` (guarda o *timer* que desvira as cartas) e
 `useEffect` (paga a recompensa quando vence e limpa o *timer* ao sair).
+
+### `src/games/AgoraOuDepoisGame.jsx`
+Jogo sobre **poupar x gastar por impulso**. O jogador começa com **R$ 50 fictícios** e tem
+5 semanas para juntar **R$ 90** e comprar um skate. Toda semana aparece uma tentação
+(a 1ª é um brinquedo simples de R$ 30) e ele escolhe **COMPRAR AGORA** (satisfação sobe na hora,
+saldo cai) ou **GUARDAR PARA DEPOIS** (satisfação média, saldo preservado). No fim de cada semana
+chega **R$ 10 de mesada** e a alegria da compra vai caindo. Guardando tudo ele termina com R$ 100;
+o brinquedo de R$ 30 ou dois gastos pequenos já impedem o objetivo (ensina que gastos somam).
+A tela final mostra o resultado, um **gráfico do cofrinho semana a semana** e a lição.
+- O dinheiro do jogo (R$) é só um `useState` dentro do componente: **não mexe nas moedas 🪙 do app**.
+- Ao terminar, chama `onGanharMoedas(...)`: **+20 moedas** por concluir e **+10** se alcançar o objetivo.
+  Um `useRef` garante que a recompensa é paga **uma única vez por partida**.
+- Conceitos: `useState` (fase, semana, saldo, satisfação, escolhas), `useRef` (trava da recompensa),
+  **renderização condicional** (tela inicial → semanas → resultado) e **componentes pequenos**
+  (`Cofrinho`, `Satisfacao`, `LinhaDoTempo`, `GraficoEvolucao`) no mesmo arquivo.
 
 ### `src/state/GameContext.jsx` — o "cérebro" da gamificação
 Cria um **Context** (memória global) com: `moedas`, `avataresComprados`, `avatarSelecionado`,
