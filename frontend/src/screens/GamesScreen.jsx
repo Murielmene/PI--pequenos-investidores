@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import PhoneLayout from '../components/PhoneLayout';
-import { StatusMessage } from '../components/Ui';
+import { MoedasPill, StatusMessage } from '../components/Ui';
+import AgoraOuDepoisGame from '../games/AgoraOuDepoisGame';
+import { useGame } from '../state/GameContext';
 import { colors } from '../theme';
 
 const games = [
@@ -28,15 +30,38 @@ const games = [
 export default function GamesScreen({ activeRoute, message, onNavigate }) {
   const [selectedGame, setSelectedGame] = useState(games[0]);
   const [result, setResult] = useState('Escolha uma resposta para ganhar pontos.');
+  const [jogoAberto, setJogoAberto] = useState(null);
+  const { moedas, ganharMoedas } = useGame();
 
   const answerQuestion = (option) => {
     setResult(option === selectedGame.answer ? 'Resposta certa! Voce ganhou 10 pontos.' : 'Quase. Revise a dica e tente novamente.');
   };
 
+  if (jogoAberto === 'agoraOuDepois') {
+    return (
+      <PhoneLayout activeRoute={activeRoute} onNavigate={onNavigate} contentStyle={styles.content}>
+        <AgoraOuDepoisGame onGanharMoedas={ganharMoedas} onSair={() => setJogoAberto(null)} />
+      </PhoneLayout>
+    );
+  }
+
   return (
     <PhoneLayout activeRoute={activeRoute} onNavigate={onNavigate} contentStyle={styles.content}>
       <StatusMessage message={message} />
       <Text style={styles.title}>JOGOS EDUCATIVOS</Text>
+      <MoedasPill moedas={moedas} />
+
+      <Pressable
+        accessibilityRole="button"
+        style={[styles.gameCard, styles.newGameCard]}
+        onPress={() => setJogoAberto('agoraOuDepois')}
+      >
+        <View style={styles.newGameInfo}>
+          <Text style={styles.gameText}>AGORA OU DEPOIS?</Text>
+          <Text style={styles.newGameDescription}>Gastar agora ou guardar para um objetivo maior?</Text>
+        </View>
+        <Text style={styles.newGameAction}>JOGAR</Text>
+      </Pressable>
 
       {games.map((game) => (
         <Pressable
@@ -91,6 +116,36 @@ const styles = StyleSheet.create({
   gameText: {
     color: colors.textPrimary,
     fontSize: 16,
+    fontWeight: '900',
+  },
+  newGameCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+    paddingVertical: 12,
+    borderWidth: 3,
+    borderColor: colors.primaryDark,
+    backgroundColor: colors.card,
+  },
+  newGameInfo: {
+    flex: 1,
+    gap: 4,
+  },
+  newGameDescription: {
+    color: colors.textSecondary,
+    fontSize: 11,
+    fontWeight: '800',
+    lineHeight: 16,
+  },
+  newGameAction: {
+    borderRadius: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    overflow: 'hidden',
+    color: colors.card,
+    backgroundColor: colors.primaryDark,
+    fontSize: 11,
     fontWeight: '900',
   },
   quizBox: {
